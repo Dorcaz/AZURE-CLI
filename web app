@@ -1,0 +1,64 @@
+Run the following commands to set up a virtual environment, and install Flask in your profile.
+python3 -m venv venv
+source venv/bin/activate
+pip install flask
+
+Run these commands in Azure Cloud Shell to create the directory for your new web app.
+mkdir ~/BestBikeApp
+cd ~/BestBikeApp
+
+Create a new file for your web app by opening application.py in the python interactive editor.
+code application.py
+
+Copy and paste the following Python code to create the main web app functionality.
+from flask import Flask
+app = Flask(__name__)
+
+@app.route("/")
+def hello():
+    return "<html><body><h1>Hello Best Bike App!</h1></body></html>\n"
+    
+Save the file and exit the editor. Save your file and exit the editor by selecting the ... menu on the top right, and then selecting Save > Close Editor, or by pressing Ctrl+S and Ctrl+Q on Windows and Linux; Command+S and Command+Q on macOS.
+
+To deploy your application to Azure, you will need to save the list of application requirements you made for it in a requirements.txt file. To do so, run the following command.
+pip freeze > requirements.txt
+
+
+Optionally test your web app
+You can test your application locally in Azure while it was running.
+
+Open a second command shell session in a new browser tab https://shell.azure.com/.
+
+From your primary command shell session (to the right), run the following commands to start your web application.
+cd ~/BestBikeApp
+export FLASK_APP=application.py
+flask run
+
+From your second command shell session, run the following command to browse to your web application.
+curl http://127.0.0.1:5000/
+
+You should see the following HTML output.
+<html><body><h1>Hello Best Bike App!</h1></body></html>
+From your primary command shell session, press Ctrl+C to quit your web app, and then close the secondary Azure Cloud Shell.
+
+
+
+
+Deploy with az webapp up
+export APPNAME=$(az webapp list --query [0].name --output tsv)
+export APPRG=$(az webapp list --query [0].resourceGroup --output tsv)
+export APPPLAN=$(az appservice plan list --query [0].name --output tsv)
+export APPSKU=$(az appservice plan list --query [0].sku.name --output tsv)
+export APPLOCATION=$(az appservice plan list --query [0].location --output tsv)
+
+Now, run az webapp up with the appropriate values. Make sure you are in the BestBikeApp directory before running this command.
+cd ~/BestBikeApp
+az webapp up --name $APPNAME --resource-group $APPRG --plan $APPPLAN --sku $APPSKU --location "$APPLOCATION"
+
+
+Verify the deployment
+Let's browse to your application to see it live. In the output, just above the JSON code block there is a line saying "You can launch the app at..." with a URL. Select that link to open your app in a new browser tab. The page may take a moment to load because the App Service is initializing your app for the first time.
+
+Once your program loads, you'll see the greeting message from your app — you've deployed successfully!
+
+Screenshot of Python's welcome page showing Hello Best Bike App!
